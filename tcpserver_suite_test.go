@@ -41,6 +41,10 @@ var _ = Describe("When starting a TCP Server", func() {
 		response, err := tcpserver.Write(port, "echo\r\n")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(response).To(Equal("echo"))
+
+		response, err = tcpserver.Write(port, "hello\r\n")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(response).To(Equal("hello"))
 	})
 
 	When("the handler errors on the client", func() {
@@ -49,7 +53,14 @@ var _ = Describe("When starting a TCP Server", func() {
 			defer server.Close()
 
 			_, err := tcpserver.Write(port, "echo\r\n")
+			Expect(err).NotTo(HaveOccurred())
+
+			_, err = tcpserver.Write(port, "error\r\n")
 			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("could not read line"))
+
+			_, err = tcpserver.Write(port, "echo\r\n")
+			Expect(err).NotTo(HaveOccurred())
 		})
 	})
 })
