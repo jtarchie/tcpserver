@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/jtarchie/sqlettuce/tcp"
-	"github.com/jtarchie/sqlettuce/tcp/handlers"
+	"github.com/jtarchie/tcpserver"
+	"github.com/jtarchie/tcpserver/handlers"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/phayes/freeport"
@@ -16,11 +16,11 @@ func TestTcp(t *testing.T) {
 	RunSpecs(t, "TCP Suite")
 }
 
-func startServer(handler tcp.Handler) (int, *tcp.Server) {
+func startServer(handler tcpserver.Handler) (int, *tcpserver.Server) {
 	port, err := freeport.GetFreePort()
 	Expect(err).NotTo(HaveOccurred())
 
-	server, err := tcp.NewServer(context.TODO(), uint(port), 1)
+	server, err := tcpserver.NewServer(context.TODO(), uint(port), 1)
 	Expect(err).NotTo(HaveOccurred())
 
 	go func() {
@@ -38,7 +38,7 @@ var _ = Describe("When starting a TCP Server", func() {
 		port, server := startServer(&handlers.Echo{})
 		defer server.Close()
 
-		response, err := tcp.Write(port, "echo\r\n")
+		response, err := tcpserver.Write(port, "echo\r\n")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(response).To(Equal("echo"))
 	})
@@ -48,7 +48,7 @@ var _ = Describe("When starting a TCP Server", func() {
 			port, server := startServer(&handlers.Error{})
 			defer server.Close()
 
-			_, err := tcp.Write(port, "echo\r\n")
+			_, err := tcpserver.Write(port, "echo\r\n")
 			Expect(err).To(HaveOccurred())
 		})
 	})
