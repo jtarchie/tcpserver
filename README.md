@@ -10,11 +10,9 @@ limits the number of goroutines in use, ensuring optimum performance.
 
 ## Features
 
-- Concurrent management of multiple TCP connections,
-- Customizable TCP connection handlers,
-- Limiting the number of goroutines,
-- Easy to use `client` and `server` types for inbound and outbound messages,
-- Error handlers on the client and server side.
+- Concurrent management of multiple TCP connections
+- Customizable TCP connection handlers
+- Limiting the number of goroutines
 
 ## Installing the Library
 
